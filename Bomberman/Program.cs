@@ -15,7 +15,8 @@ namespace Bomberman
         {
             CELL_TYPE_NONE,
             CELL_TYPE_HARD,
-            CELL_TYPE_SOFT
+            CELL_TYPE_SOFT,
+            CELL_TYPE_BOMB
         }
         enum Character
         {
@@ -81,25 +82,33 @@ namespace Bomberman
                 {
                     for (x = 0; x < MAX_WIDTH; x++)
                     {
-                        if (x == cursorX && y == cursorY)
+                        if (cells[y, x] != (int)cellAA.CELL_TYPE_BOMB)
                         {
-                            Console.Write("＠");
+                            
+                            if (x == cursorX && y == cursorY)
+                            {
+                                Console.Write("＠");
+                            }
+                            else if (y == 0 || y == MAX_HEIGHT - 1)
+                            {
+                                Console.Write("■");
+                            }
+                            else if (x == 0 || x == MAX_WIDTH - 1)
+                            {
+                                Console.Write("■");
+                            }
+                            else if (y % 2 == 0 && x % 2 == 0)
+                            {
+                                Console.Write("■");
+                            }
+                            else
+                            {
+                                Console.Write("　");
+                            }
                         }
-                        else if (y == 0 || y == MAX_HEIGHT - 1)
+                        else if(cells[y, x] == (int)cellAA.CELL_TYPE_BOMB)
                         {
-                            Console.Write("■");
-                        }
-                        else if (x == 0 || x == MAX_WIDTH - 1)
-                        {
-                            Console.Write("■");
-                        }
-                        else if (y % 2 == 0 && x % 2 == 0)
-                        {
-                            Console.Write("■");
-                        }
-                        else
-                        {
-                            Console.Write("　");
+                            Console.Write("●");
                         }
                     }
                     Console.Write("\n");
@@ -145,7 +154,9 @@ namespace Bomberman
                             cursorX--;
                         }
                         break;
-                    default: break;
+                    default:
+                        cells[cursorY, cursorX] = (int)cellAA.CELL_TYPE_BOMB;
+                        break;
                 }
 
 
