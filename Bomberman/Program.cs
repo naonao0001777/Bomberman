@@ -13,17 +13,14 @@ namespace Bomberman
 
         enum cellAA
         {
-            CELL_TYPE_NONE,
-            CELL_TYPE_HARD,
-            CELL_TYPE_SOFT,
-            CELL_TYPE_BOMB
+            CELL_TYPE_NONE, // "　"
+            CELL_TYPE_HARD, // "■"
+            CELL_TYPE_SOFT, // "□"
+            CELL_TYPE_BOMB, // "●"
+            PLAYER,         // "＠"
+            MONSTER         // "敵"
         }
-        enum Character
-        {
-            PLAYER = 3,
-            MONSTER = 4
-        }
-
+       
         static void Main(string[] args)
         {
             int[,] cells = new int[MAX_HEIGHT, MAX_WIDTH];
@@ -42,16 +39,20 @@ namespace Bomberman
                 DrawCells();
 
             }
+            
             // セル情報
             void ResetCells()
-            {
+            {  
+                Random rY = new Random();
+                Random rX = new Random();
+
                 for (y = 0; y < MAX_HEIGHT; y++)
                 {
                     for (x = 0; x < MAX_WIDTH; x++)
                     {
                         if (x == cursorX && y == cursorY)
                         {
-                            cells[y, x] = (int)Character.PLAYER;
+                            cells[y, x] = (int)cellAA.PLAYER;
                         }
                         else if (y == 0 || y == MAX_HEIGHT - 1)
                         {
@@ -69,6 +70,11 @@ namespace Bomberman
                         {
                             cells[y, x] = (int)cellAA.CELL_TYPE_NONE;
                         }
+
+                        if (cells[y, x] == (int)cellAA.CELL_TYPE_NONE)
+                        {
+                            cells[rY.Next(13), rX.Next(31)] = (int)cellAA.CELL_TYPE_SOFT;
+                        }
                     }
                     Console.Write("\n");
                 }
@@ -77,7 +83,6 @@ namespace Bomberman
             // 画面を作成
             void DrawCells()
             {
-
                 for (y = 0; y < MAX_HEIGHT; y++)
                 {
                     for (x = 0; x < MAX_WIDTH; x++)
@@ -103,7 +108,14 @@ namespace Bomberman
                             }
                             else
                             {
-                                Console.Write("　");
+                                if (cells[y, x] == (int)cellAA.CELL_TYPE_SOFT)
+                                {
+                                    Console.Write("□");
+                                }
+                                else
+                                {
+                                    Console.Write("　");
+                                }
                             }
                         }
                         else if(cells[y, x] == (int)cellAA.CELL_TYPE_BOMB)
