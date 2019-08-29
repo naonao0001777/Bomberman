@@ -34,6 +34,8 @@ namespace Bomberman
             int bombTimer = 0;
             bool bombFlg = false;
 
+            bool bombSetFlg = false;
+
             // リセット処理
             ResetCells();
 
@@ -50,6 +52,9 @@ namespace Bomberman
                 Random rY = new Random();
                 Random rX = new Random();
 
+                Random randMonstY = new Random();
+                Random randMonstX = new Random();
+                
                 for (y = 0; y < MAX_HEIGHT; y++)
                 {
                     for (x = 0; x < MAX_WIDTH; x++)
@@ -74,27 +79,40 @@ namespace Bomberman
                         {
                             cells[y, x] = (int)CellAA.CELL_TYPE_NONE;
                         }
+                        bool monstFlg = false;
+
+                        int a = randMonstY.Next(2);
+                        if (a == 1)
+                        {
+                            monstFlg = true;
+                        }
 
                         // CELL_TYPE_SOFTをランダム配置
-                        //if (cells[y, x] == (int)CellAA.CELL_TYPE_NONE)
-                        //{
-                        //    cells[rY.Next(13), rX.Next(31)] = (int)CellAA.CELL_TYPE_SOFT;
-                        //}
-                        // モンスターを配置する
-                        if (cells[y,x] == (int)CellAA.CELL_TYPE_NONE)
+                        bool softCellFlg = false;
+
+                        int val = randMonstY.Next(2);
+                        if (val == 1)
                         {
-
-                            Random randMonstY = new Random();
-                            Random randMonstX = new Random();
-
-                            cells[randMonstY.Next(13), randMonstX.Next(31)] = (int)CellAA.MONSTER;
+                            softCellFlg = true;
                         }
+                        
+                        if (cells[y, x] == (int)CellAA.CELL_TYPE_NONE && softCellFlg)
+                        {
+                            cells[y,x] = (int)CellAA.CELL_TYPE_SOFT;
+                        }
+
+                        //モンスターを配置する
+                        //if (cells[y, x] == (int)CellAA.CELL_TYPE_NONE && monstFlg)
+                        //{
+
+                        //    cells[y, x] = (int)CellAA.MONSTER;
+                        //}
                     }
                     Console.Write("\n");
                 }
             }
-            
-            // 画面を作成
+
+            // 画面を描画
             void DrawCells()
             {
                 for (y = 0; y < MAX_HEIGHT; y++)
@@ -103,7 +121,7 @@ namespace Bomberman
                     {
                         if (cells[y, x] != (int)CellAA.CELL_TYPE_BOMB)
                         {
-                            
+
                             if (x == cursorX && y == cursorY)
                             {
                                 Console.Write("＠");
@@ -136,17 +154,36 @@ namespace Bomberman
                                 }
                             }
                         }
-                        else if(cells[y, x] == (int)CellAA.CELL_TYPE_BOMB)
+                        else if (cells[y, x] == (int)CellAA.CELL_TYPE_BOMB)
                         {
-                            DateTime dt = DateTime.Now;
-                            bombTimer -= dt.Second;
-                            if (bombFlg&&bombTimer != 0)
+                            bombSetFlg = false;
+                            if (bombSetFlg)
+                            {
+                                DateTime standDate = DateTime.Now;
+
+                                bombTimer = standDate.Second + 3;
+                            }
+                            // 爆弾の時限を3秒後にセッティング                           
+                            bombFlg = true;
+
+                            DateTime end = DateTime.Now;
+
+                            int a = bombTimer - end.Second;
+
+                            if (a <= 0)
+                            {
+                                bombFlg = false;
+                            }
+
+                            if (bombFlg)
                             {
                                 Console.Write("●");
+                                bombSetFlg = true;
                             }
-                            else if(bombFlg && bombTimer == 0)
+                            else if (!bombFlg)
                             {
                                 cells[y, x] = (int)CellAA.CELL_TYPE_NONE;
+                                
                             }
                         }
                     }
@@ -155,7 +192,6 @@ namespace Bomberman
 
                 // カーソル移動
                 MoveCursor();
-               
 
             }
 
@@ -169,38 +205,42 @@ namespace Bomberman
                 {
                     case "W":
                         cursorY--;
-                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD)
+                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD || cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_SOFT)
                         {
                             cursorY++;
                         }
                         break;
                     case "S":
                         cursorY++;
-                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD)
+                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD || cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_SOFT)
                         {
                             cursorY--;
                         }
                         break;
                     case "A":
                         cursorX--;
-                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD)
+                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD || cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_SOFT)
                         {
                             cursorX++;
                         }
                         break;
                     case "D":
                         cursorX++;
-                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD)
+                        if (cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_HARD || cells[cursorY, cursorX] == (int)CellAA.CELL_TYPE_SOFT)
                         {
                             cursorX--;
                         }
                         break;
                     default:
                         cells[cursorY, cursorX] = (int)CellAA.CELL_TYPE_BOMB;
-                        DateTime date = DateTime.Now;
-                        bombTimer = date.Second + 3;
-                        bombFlg = true;
+                       
                         break;
+                }
+
+                // 爆風の描画
+                void ExplosionBomb()
+                {
+
                 }
 
 
