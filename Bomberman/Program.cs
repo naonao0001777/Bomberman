@@ -28,8 +28,8 @@ namespace Bomberman
             int x = 0;
             int y = 0;
 
-            int cursorY = 1;
             int cursorX = 1;
+            int cursorY = 1;
 
             int bombTimer = 0;
             bool bombFlg = false;
@@ -79,6 +79,8 @@ namespace Bomberman
                         {
                             cells[y, x] = (int)CellAA.CELL_TYPE_NONE;
                         }
+
+                        // モンスター配置
                         bool monstFlg = false;
 
                         int a = randMonstY.Next(2);
@@ -239,6 +241,12 @@ namespace Bomberman
 
                 // 爆風の描画
                 void ExplosionBomb()
+                {
+
+                }
+
+                // 爆弾の時間をセッティング
+                void BombTimer()
                 {
 
                 }
