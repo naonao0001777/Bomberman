@@ -34,6 +34,9 @@ namespace Bomberman
             DIRECTION_EAST,
             DIRECTION_MAX
         }
+
+        // 爆風レベル
+        const int EXPLOSION_LEVEL = 3;
         
         static void Main(string[] args)
         {
@@ -227,12 +230,12 @@ namespace Bomberman
                 }
 
                 // カーソル移動
-                MoveCursor();
+                MoveCursor(bSetFlg);
 
             }
 
             // カーソル操作処理
-            void MoveCursor()
+            void MoveCursor(bool bombAlreadySet)
             {
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 string key = keyInfo.Key.ToString();
@@ -276,8 +279,10 @@ namespace Bomberman
                         }
                         break;
                     default:
-                        cells[cursorY, cursorX] = (int)CellAA.CELL_TYPE_BOMB;
-
+                        if (!bombAlreadySet)
+                        {
+                            cells[cursorY, cursorX] = (int)CellAA.CELL_TYPE_BOMB;
+                        }
                         break;
                 }
 
@@ -286,12 +291,24 @@ namespace Bomberman
             // 爆風の描画
             void ExplosionBomb()
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < EXPLOSION_LEVEL; i++)
                 {
-                    cells[y - i, x] = (int)CellAA.CELL_EXPLOSION;
-                    cells[y, x - i] = (int)CellAA.CELL_EXPLOSION;
-                    cells[y + i, x] = (int)CellAA.CELL_EXPLOSION;
-                    cells[y, x + i] = (int)CellAA.CELL_EXPLOSION;
+                    if (y - i > 0 && cells[y-i,x] != (int)CellAA.CELL_TYPE_HARD)
+                    {
+                        cells[y - i, x] = (int)CellAA.CELL_EXPLOSION;
+                    }
+                    if(y + i < MAX_HEIGHT && cells[y + i,x] != (int)CellAA.CELL_TYPE_HARD)
+                    {
+                        cells[y + i, x] = (int)CellAA.CELL_EXPLOSION;
+                    }
+                    if (x - i > 0 && cells[y, x - i] != (int)CellAA.CELL_TYPE_HARD)
+                    {
+                        cells[y, x - i] = (int)CellAA.CELL_EXPLOSION;
+                    }
+                    if (x + i < MAX_WIDTH && cells[y, x + i] != (int)CellAA.CELL_TYPE_HARD)
+                    {
+                        cells[y, x + i] = (int)CellAA.CELL_EXPLOSION;
+                    }
                 }
             }
 
@@ -351,7 +368,7 @@ namespace Bomberman
             {
                 bool monstFlg = false;
 
-                int a = rMon.Next(2);
+                int a = rMon.Next(50);
                 if (a == 1)
                 {
                     monstFlg = true;
