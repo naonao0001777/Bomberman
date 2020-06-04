@@ -40,7 +40,6 @@ namespace Bomberman
         
         static void Main(string[] args)
         {
-
             int[,] cells = new int[MAX_HEIGHT, MAX_WIDTH];
 
             int x = 0;
@@ -54,6 +53,7 @@ namespace Bomberman
             bool bombFlg = false;
 
             bool bombSetFlg = false;
+
             // リセット処理
             ResetCells();
 
