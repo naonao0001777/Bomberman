@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace Bomberman
 {
@@ -175,43 +176,8 @@ namespace Bomberman
                                 else
                                 {
                                     bombTimer--;
-                                    switch (bombTimer)
-                                    {
-                                        case 10:
-                                            Console.Write("10");
-                                            break;
-                                        case 9:
-                                            Console.Write("９");
-                                            break;
-                                        case 8:
-                                            Console.Write("８");
-                                            break;
-                                        case 7:
-                                            Console.Write("７");
-                                            break;
-                                        case 6:
-                                            Console.Write("６");
-                                            break;
-                                        case 5:
-                                            Console.Write("５");
-                                            break;
-                                        case 4:
-                                            Console.Write("４");
-                                            break;
-                                        case 3:
-                                            Console.Write("３");
-                                            break;
-                                        case 2:
-                                            Console.Write("２");
-                                            break;
-                                        case 1:
-                                            Console.Write("１");
-                                            break;
-                                        case 0:
-                                            Console.Write("０");
-                                            break;
 
-                                    }
+                                    Console.Write(Strings.StrConv(bombTimer.ToString(),VbStrConv.Wide));
                                 }
                                 ////BombTimer(bombFlg,bombSetFlg);
                                 //await Task.Run(async () =>
@@ -293,19 +259,19 @@ namespace Bomberman
             {
                 for (int i = 0; i < EXPLOSION_LEVEL; i++)
                 {
-                    if (y - i > 0 && cells[y-i,x] != (int)CellAA.CELL_TYPE_HARD)
+                    if (y - i > 0 && cells[y - i, x] != (int)CellAA.CELL_TYPE_HARD)
                     {
                         cells[y - i, x] = (int)CellAA.CELL_EXPLOSION;
                     }
-                    if(y + i < MAX_HEIGHT && cells[y + i,x] != (int)CellAA.CELL_TYPE_HARD)
+                    if (y + i < MAX_HEIGHT && cells[y + i, x] != (int)CellAA.CELL_TYPE_HARD && cells[y + i, x] != (int)CellAA.CELL_TYPE_BOMB)
                     {
                         cells[y + i, x] = (int)CellAA.CELL_EXPLOSION;
                     }
-                    if (x - i > 0 && cells[y, x - i] != (int)CellAA.CELL_TYPE_HARD)
+                    if (x - i > 0 && cells[y, x - i] != (int)CellAA.CELL_TYPE_HARD && cells[y + i, x] != (int)CellAA.CELL_TYPE_BOMB)
                     {
                         cells[y, x - i] = (int)CellAA.CELL_EXPLOSION;
                     }
-                    if (x + i < MAX_WIDTH && cells[y, x + i] != (int)CellAA.CELL_TYPE_HARD)
+                    if (x + i < MAX_WIDTH && cells[y, x + i] != (int)CellAA.CELL_TYPE_HARD && cells[y + i, x] != (int)CellAA.CELL_TYPE_BOMB)
                     {
                         cells[y, x + i] = (int)CellAA.CELL_EXPLOSION;
                     }
