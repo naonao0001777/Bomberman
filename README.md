@@ -4,7 +4,7 @@
 
 ![操作方法](https://github.com/naonao0001777/Bomberman/blob/master/a.gif)
 
-## Summary
+## TL;DR
 ボンバーマンを操作して💣を配置し、`↑W` `←A` `↓S` `→D`で操作して敵を倒せ！！
 
 ## Requirement
